@@ -19,13 +19,13 @@ BOOL write_file(const wchar_t * file_path, const char * buf, int length) {
 	return TRUE;
 }
 
-extern void mmLoaderCodeStart();
-extern void mmLoaderCodeEnd();
+extern void shellcode_CodeStart();
+extern void shellcode_CodeEnd();
 
 int main() {
 	// Get code start and end address
-	unsigned char *pStart = (unsigned char *)&mmLoaderCodeStart;
-	unsigned char *pEnd = (unsigned char *)&mmLoaderCodeEnd;
+	unsigned char *pStart = (unsigned char *)&shellcode_CodeStart;
+	unsigned char *pEnd = (unsigned char *)&shellcode_CodeEnd;
 
 	char *out = malloc((pEnd - pStart) * 8);
 	strcpy(out, "const unsigned char shellcode[] = {\n");
@@ -42,9 +42,15 @@ int main() {
 	}
 	strcat(out, "};");
 
+#ifdef _WIN64
+#define SHELLCODE_H L"shellcode_x64.h"
+#else
+#define SHELLCODE_H L"shellcode.h"
+#endif // _WIN64
+
 	// save shellcode.h
-	DeleteFile(L"shellcode.h");
-	write_file(L"shellcode.h", (const char*)out, strlen(out));
+	DeleteFile(SHELLCODE_H);
+	write_file(SHELLCODE_H, (const char*)out, strlen(out));
 	free(out);
 
 	// debug

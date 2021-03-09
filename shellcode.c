@@ -11,7 +11,7 @@ int mml_strcmpA(const char *psza, const char *pszb);
 
 #pragma region shellcode_body
 
-void mmLoaderCodeStart() {
+void shellcode_CodeStart() {
 	wchar_t wszKernel[] = { 'k', 'e', 'r', 'n', 'e', 'l', '3', '2', '.', 'd', 'l', 'l', 0 };
 	HMODULE hKernelModule = _GetModuleHandle(wszKernel);
 	if (!hKernelModule)
@@ -20,11 +20,14 @@ void mmLoaderCodeStart() {
 	char szGetProcAddress[] = { 'G', 'e', 't', 'P', 'r', 'o', 'c', 'A', 'd', 'd', 'r', 'e', 's', 's', 0 };
 	Type_GetProcAddress pfnGetProcAddress = (Type_GetProcAddress)_GetProcAddress(hKernelModule, szGetProcAddress);
 	if (!pfnGetProcAddress)
-		pfnGetProcAddress = (Type_GetProcAddress)_GetProcAddress;
+		return;
 
 	char szLoadLibraryA[] = { 'L', 'o', 'a', 'd', 'L', 'i', 'b', 'r', 'a', 'r', 'y', 'A', 0 };
 	Type_LoadLibraryA pfnLoadLibraryA = (Type_LoadLibraryA)pfnGetProcAddress(hKernelModule, szLoadLibraryA);
+	if (!pfnLoadLibraryA)
+		return;
 
+	// example of execute calc.exe
 	typedef HINSTANCE(WINAPI *Type_ShellExecuteA)(__in_opt HWND hwnd, __in_opt LPCSTR lpOperation, __in LPCSTR lpFile, __in_opt LPCSTR lpParameters,
 		__in_opt LPCSTR lpDirectory, __in INT nShowCmd);
 	char szUser32[] = { 'S', 'h', 'e', 'l', 'l', '3', '2', '.', 'd', 'l', 'l', 0 };
@@ -209,7 +212,7 @@ int mml_strcmpA(const char *psza, const char *pszb) {
 	return c1 - c2;
 }
 
-void mmLoaderCodeEnd() {
+void shellcode_CodeEnd() {
 	return;
 }
 #pragma endregion shellcode_body

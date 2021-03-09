@@ -1,6 +1,6 @@
-mmLoaderCodeStart
+shellcode_CodeStart
 _GetProcAddress
 _GetModuleHandle
 mml_stricmpW
 mml_strcmpA
-mmLoaderCodeEnd
+shellcode_CodeEnd

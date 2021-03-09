@@ -1,0 +1,6 @@
+mmLoaderCodeStart
+_GetProcAddress
+_GetModuleHandle
+mml_stricmpW
+mml_strcmpA
+mmLoaderCodeEnd
